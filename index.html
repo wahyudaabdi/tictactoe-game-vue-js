@@ -1,0 +1,120 @@
+<!doctype>
+<html>
+<head>
+    <title>Tic Tac Toe</title>
+    <script type="text/javascript" src="vue.min.js"></script>
+    <link rel="stylesheet" href="style.css"/>
+</head>
+
+<body>
+<div id="app">
+    <button class="btn-panduan" v-if="!gameIsActive" v-on:click="toggle('open')">Lihat Panduan</button>
+    <div class="wrap-panduan" v-if='isHelp'>
+        <div class="panduan">
+            <b>Panduan/Cara Membuat Papan Tic Tac Toe <button class="close" v-on:click="toggle('close')">Tutup</button></b>
+            <ul>
+                <li>Form input scalable : berfungsi untuk menentukan bentuk atau (pxl) papan tic tac toe. Contoh jika anda memasukkan angka tiga maka
+                sistem akan membuat papan tic tac toe berdimensi 3 x 3</li>
+                <li>Form input No. of Point : Maksud dari form input tersebut adalah berfungsi untuk menentukan jumlah titik baris/kolom/diagonal
+                yang sebaris.<br />
+                Contohnya : Ada papan permainan tic tac toe yang berdimensi 7 x 7, dengan no of point nya 3. Maka player 1 dan 2 harus bisa membuat
+                deretan X atau O sebanyak 3 deretan, Baik secara horizontal, vertical, ataupun diagonal. Seperti terlihat pada gambar dibawah.
+                </li>
+                <li class="img">
+                    <img src="panduan.jpg" alt="panduan" />
+                </li>
+                <li>Dimensi 3x3, 4x4 => nilai No. of pointnya adalah 3 (Sudah ditetapkan secara default).</li>
+                <li>Dimensi 5x5 sampai 15x15 => nilai No. of pointnya adalah 4 (Sudah ditetapkan secara default).</li>
+                <li>Dimensi > 15x15 => nilai No. of pointnya dapat ditentukan langsung oleh pemain.</li>
+            </ul>
+        </div>
+    </div>
+    <div v-if="!gameIsActive" class="container">
+
+        <div class="centered">
+            <h2>Tic Tac Toe</h2>
+            <p class="subtitle">Simple game to improve thinking skills and find the right patterns with your friends</p>
+            <div class="form-group">
+                <label>Scalable</label>
+                <input class="form-control" type="number" v-model="scalable" placeholder="Insert Number"/>
+            </div>
+
+            <div class="form-group">
+                <label>No. of Point</label>
+                <input class="form-control" type="number" v-model="n_point" placeholder="Insert Number" />
+            </div>
+
+            <button v-on:click="startGame()" v-if="!isProcessing">Start Game</button>
+            <p class="loader" v-else>Please Wait ...</p>
+        </div>
+    </div>
+    <div v-else>
+        <div class="content-wrap">
+            <div class="content-in-wrap">
+                <div class="content-wrap-black">
+                    <div class="content-top">
+                        <span class="header">Scalable {{ scalable }} * {{ scalable }}
+                            <br />
+                            <small
+                                style="font-size: 14px; font-weight: normal">No. of Point : {{ n_point }}
+                            </small>
+                        </span>
+                        <span
+                            class="times"
+                            align="right"
+                            v-bind:class="theWinner == '...' ? '' : 'blinks'">
+                            {{ hour }}:{{ minutes }}:{{ seconds }}
+                        </span>
+                    </div>
+
+                    <div class="content-midle">
+
+                        <h2>The Winner is</h2>
+                        <div class="content-midle-box">
+                            <h1 :class="theWinner == '...' ? '' : 'blinks'">{{ theWinner }}</h1>
+                        </div>
+
+                        <div class="content-midle-player">
+                            <h3>Player 1 (X)</h3>
+                            <p>Clicked : {{ clickedPlayer1 }}</p>
+                        </div>
+
+                        <div class="content-midle-player">
+                            <h3>Player 2 (O)</h3>
+                            <p>Clicked : {{ clickedPlayer2 }}</p>
+                        </div>
+                    </div>
+
+                    <div class="content-bottom">
+                        <button class="exit" v-on:click="exitGame()">Exit</button>
+                        <button class="restart" v-on:click="restartGame()">Restart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="wrap-games">
+                <table>
+                    <tr v-for="(baris, index_baris) in gameState">
+                        <td v-for="(kolom, index_kolom) in baris">
+                            <div
+                                :id="'a' + index_baris + 'b' + index_kolom"
+                                :style="'width: ' + widd + 'vh; height: ' + widd + 'vh;'"
+                                v-on:click="get_click(index_baris, index_kolom, $event)"
+                                class="cell"
+                            ></div>
+                        </td>
+                    </tr>
+                </table>
+                <div v-if="theWinner != '...'" class="wrap-notification">
+                    <div class="wrap-content-notification">
+                        <h1>{{ subs }}</h1>
+                        <h3>{{ theWinner }}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="script.js" type="text/javascript"></script>
+<body>
+</html>
